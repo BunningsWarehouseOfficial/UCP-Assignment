@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include "FileManager.h"
 
+/* PURPOSE:  */
 void loadSettings(Settings* settings)
 {
 
