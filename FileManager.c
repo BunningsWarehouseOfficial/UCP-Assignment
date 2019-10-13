@@ -8,7 +8,29 @@
 #include "FileManager.h"
 
 /* PURPOSE:  */
-void loadSettings(Settings* settings)
+void loadSettings(Settings* settings, char* filename)
+{
+    char *file;
+    int width, height, winCondition;
+    FILE *f;
+    
+    /* Base case: settings file is either invalid or not read properly */
+    settings->winCondition = -1; /* -1 represents base case */
+    f = fopen(file, "r");
+
+    if (f == NULL)
+    {/* Checking for initial open error */
+        perror("Error opening journal file");
+    }
+    else
+    {
+        /* code */
+    }
+        
+}
+
+/* PURPOSE:  */
+void saveLogs()
 {
 
 }
