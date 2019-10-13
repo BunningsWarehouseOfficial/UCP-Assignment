@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
 	}
 	else
 	{/* Error for running incorrectly on command line */
-		printf("Error: Must be run as TTT [<filename>.txt]");
+		printf("Error: Must be run as TTT [<filename>.txt]\n");
 	}
 	
 	
