@@ -50,18 +50,18 @@ void* removeStart(LinkedList* list)
     /* 1 node only */
     else if (head->next == NULL)
     {
+        removed = head->data; /* return data */
         list->head = NULL; /* disconnecting node */
         list->tail = NULL;
-        removed = head->data; /* return data */
         free(head);
     }
     /* > 1 node */
     else
     {
+        removed = head->data; /* return data */
         head->next->prev = NULL; /* disconnecting node */
         list->head = head->next; /* changing head */
         head->next = NULL;
-        removed = head->data; /* return data */
         free(head);
     }
     return removed;
@@ -102,18 +102,18 @@ void* removeLast(LinkedList* list)
     /* 1 node only */
     else if (tail->prev == NULL)
     {
+        removed = tail->data; /* return data */
         list->head = NULL; /* disconnecting node */
         list->tail = NULL;
-        removed = tail->data; /* return data */
         free(tail);
     }
     /* > 1 node */
     else
     {
+        removed = tail->data; /* return data */
         tail->prev->next = NULL; /* disconnecting node */
         list->tail = tail->prev; /* changing tail */
         tail->prev = NULL;
-        removed = tail->data; /* return data */
         free(tail);
     }
     return removed;
