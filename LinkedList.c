@@ -1,13 +1,14 @@
 /* Filename:           LinkedList.c
  * Author:             Kristian Rados (19764285)
  * Date Created:       02/10/2019
- * Date Last Modified: 13/10/2019
+ * Date Last Modified: 14/10/2019
  * Purpose: __________________________________________________________________*/
 
 #include <stdlib.h>
 #include <stdio.h> /*** Is this needed? ***/
 #include "LinkedList.h"
 
+/* PURPOSE:  */
 LinkedList* createLinkedList()
 {/* creating central list */
     LinkedList* list = (LinkedList*)malloc(sizeof(LinkedList));
@@ -16,6 +17,7 @@ LinkedList* createLinkedList()
     return list;
 }
 
+/* PURPOSE:  */
 void insertStart(LinkedList* list, void* data)
 {
     LinkedListNode* newNode = (LinkedListNode*)malloc(sizeof(LinkedListNode));
@@ -38,6 +40,7 @@ void insertStart(LinkedList* list, void* data)
     }
 }
 
+/* PURPOSE:  */
 void* removeStart(LinkedList* list)
 {
     void* removed;
@@ -61,12 +64,12 @@ void* removeStart(LinkedList* list)
         removed = head->data; /* return data */
         head->next->prev = NULL; /* disconnecting node */
         list->head = head->next; /* changing head */
-        head->next = NULL;
         free(head);
     }
     return removed;
 }
 
+/* PURPOSE:  */
 void insertLast(LinkedList* list, void* data)
 {
     LinkedListNode* newNode = (LinkedListNode*)malloc(sizeof(LinkedListNode));
@@ -89,6 +92,7 @@ void insertLast(LinkedList* list, void* data)
     }
 }
 
+/* PURPOSE:  */
 void* removeLast(LinkedList* list)
 {
     void* removed;
@@ -113,12 +117,12 @@ void* removeLast(LinkedList* list)
         removed = tail->data; /* return data */
         tail->prev->next = NULL; /* disconnecting node */
         list->tail = tail->prev; /* changing tail */
-        tail->prev = NULL;
         free(tail);
     }
     return removed;
 }
 
+/* PURPOSE:  */
 void printLinkedList(LinkedList* list, void (*print)(void*))
 {
     LinkedListNode* current = list->head; /* cursor for iterating through */
@@ -127,23 +131,19 @@ void printLinkedList(LinkedList* list, void (*print)(void*))
         (*print)(current->data);
         current = current->next;
     }
-    
-    /* Entry e;
-    e = current->data;
-    printf("%4d-%02d-%02d: %s", e.y, e.m, e.d, e.msg); */
 }
 
-void freeLinkedList(LinkedList* list)
+/* PURPOSE:  */
+void freeLinkedList(LinkedList* list, void (*freeNode)(void*))
 {
-    LinkedListNode *node, *nextNode;
+    LinkedListNode *current;
 
-    node = list->head;
-    while (node != NULL)
+    current = list->head;
+    while (current != NULL)
     {
-        nextNode = node->next;
-        free(node->data);
-        free(node);
-        node = nextNode;
+        (*freeNode)(current->data);                                        /*** not 100% sure this works/is valid ***/
+        free(current);
+        current = current->next;
     }
     free(list);
 }
