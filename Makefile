@@ -15,7 +15,7 @@ FileManager.o : FileManager.c FileManager.h
 Game.o : Game.c Game.h
 	$(CC) -c Game.c $(CFLAGS)
 
-LinkedList.o : LinkedList.c LinkedList.h jread.h
+LinkedList.o : LinkedList.c LinkedList.h
 	$(CC) -c LinkedList.c $(CFLAGS)
 
 clean:

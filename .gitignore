@@ -1,1 +1,6 @@
 .vscode/c_cpp_properties.json
+FileManager.o
+Game.o
+UserInterface.o
+LinkedList.o
+mnk

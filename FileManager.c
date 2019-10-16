@@ -29,12 +29,12 @@ void loadSettings(Settings* settings, char* filename)
         int upper, lower; /* "booleans" */
         int ii = 0; /* Counting number of lines read with ii */
 
+        line = fscanf(f, "%c=%1d\n", &c, &v);
         while (valid == 1 && line != EOF)
         {
-            line = fscanf(f, "%c=%1d", &c, &v);
             upper = (c != 'M' && c != 'N' && c != 'K'); /*** TEST BOOLS ***/
             lower = (c != 'm' && c != 'n' && c != 'k');
-            if (line != 2 || (upper && lower) || v <= 0)
+            if ((line != 2 && line != -1) || (upper && lower) || v <= 0)
             {/* Catching any formatting errors */
                 printf("Error: Invalid line format in settings file, format "
                        "for each line should be A=x, where A = M, N or K\n");
@@ -69,8 +69,8 @@ void loadSettings(Settings* settings, char* filename)
                         else
                             height = v;
                         break;
-                    case 'K': case 'k':
-                        if (winCondition != 0)
+                    case 'K': case 'k': /* Accounting for base case -1 */
+                        if (winCondition != 0 && winCondition != -1)
                         {
                             printf("Error: K appears more than once\n");
                             valid = 0;
@@ -79,9 +79,10 @@ void loadSettings(Settings* settings, char* filename)
                             winCondition = v;
                         break;
                 }
-            }
+            } 
             ii++;
-        }
+            line = fscanf(f, "%c=%1d\n", &c, &v); /* Get next line */
+        } 
         
         if (ferror(f))
         {/* Catching any read errors */
