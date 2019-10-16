@@ -1,7 +1,7 @@
 /* Filename:           FileManager.c
    Author:             Kristian Rados (19764285)
    Date Created:       13/10/2019
-   Date Last Modified: 15/10/2019
+   Date Last Modified: 16/10/2019
    Purpose: __________________________________________________________________*/
 #include <stdlib.h>
 #include <stdio.h>
@@ -10,16 +10,15 @@
 /* PURPOSE:  */
 void loadSettings(Settings* settings, char* filename)
 {
-    char *file;
+    FILE *f;
     char c; /* c for character */
     int width, height, winCondition, line, v; /* v for value */
     int valid = 1; /* "boolean" */
     width = height = winCondition = 0;
-    FILE *f;
     
     /* Base case: settings file is either invalid or not read properly */
     settings->winCondition = -1; /* -1 represents base case */
-    f = fopen(file, "r");
+    f = fopen(filename, "r");
 
     if (f == NULL)
     {/* Checking for initial open error */
@@ -32,7 +31,7 @@ void loadSettings(Settings* settings, char* filename)
 
         while (valid == 1 && line != EOF)
         {
-            line = fscanf(f, "%c=%1d", c, v);
+            line = fscanf(f, "%c=%1d", &c, &v);
             upper = (c != 'M' && c != 'N' && c != 'K'); /*** TEST BOOLS ***/
             lower = (c != 'm' && c != 'n' && c != 'k');
             if (line != 2 || (upper && lower) || v <= 0)
@@ -54,22 +53,28 @@ void loadSettings(Settings* settings, char* filename)
                     changed from 0 already */
                     case 'M': case 'm':
                         if (width != 0)
+                        {
                             printf("Error: M appears more than once\n");
                             valid = 0;
+                        }
                         else
                             width = v;
                         break;
                     case 'N': case 'n':
                         if (height != 0)
+                        {
                             printf("Error: N appears more than once\n");
                             valid = 0;
+                        }
                         else
                             height = v;
                         break;
-                    case 'K': case 'k';
+                    case 'K': case 'k':
                         if (winCondition != 0)
+                        {
                             printf("Error: K appears more than once\n");
                             valid = 0;
+                        }
                         else
                             winCondition = v;
                         break;
