@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
 		loadSettings(settings, settingsFile);
 		if (settings->winCondition != -1)
 		{/* Program only continues if the settings file is valid */
-		
+			menu(settings);
 		}
 
 		free(settings);	
@@ -31,4 +31,23 @@ int main(int argc, char* argv[])
 	}
 	
 	return 0;
+}
+
+void menu(Settings* settings)
+{			
+	int cmd, scan;
+	char* prompt;
+	prompt = "\n[1] New Game \n[2] View Settings \n[3] View Logs \n"
+	         "[4] Save Logs \n[5] Exit\n\n";
+
+	do
+	{
+		printf("%s", prompt);
+		scan = scanf("%d", &cmd);
+		if (scan != 1)
+		{
+			printf("Error: Invalid input, please enter a single digit "
+			       "number\n\n")
+		}
+	} while (cmd != 5);
 }
