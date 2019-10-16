@@ -20,9 +20,9 @@ int main(int argc, char* argv[])
 		loadSettings(settings, settingsFile);
 		if (settings->winCondition != -1)
 		{/* Program only continues if the settings file is valid */
-			printf("Success\n");
-		}
 		
+		}
+
 		free(settings);	
 	}
 	else
