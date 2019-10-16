@@ -34,6 +34,7 @@ int main(int argc, char* argv[])
 	return 0;
 }
 
+/* PURPOSE:  */
 void menu(Settings* settings)
 {			
 	int cmd;
@@ -63,7 +64,7 @@ void menu(Settings* settings)
 			switch (cmd)
 			{
 				case 1:
-
+					newGame(settings);
 					break;
 				case 2:
 					displaySettings(settings);
