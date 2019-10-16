@@ -1,7 +1,7 @@
 /* Filename:           UserInterface.c
    Author:             Kristian Rados (19764285)
    Date Created:       13/10/2019
-   Date Last Modified: 13/10/2019
+   Date Last Modified: 15/10/2019
    Purpose: __________________________________________________________________*/
 #include <stdlib.h>
 #include "UserInterface.h"
@@ -14,13 +14,13 @@ int main(int argc, char* argv[])
 {
 	if (argc == 2)
 	{
-		Settings settings; /* Declaring settings struct */
+		Settings* settings = (Settings*)malloc(sizeof(Settings));
 		char* settingsFile = argv[1];
-		loadSettings(&settings, settingsFile);
+		loadSettings(settings, settingsFile);
 		if (settings.winCondition != -1)
 		{/* Program only continues if the settings file is valid */
 
-		}		
+		}
 		
 	}
 	else
@@ -28,6 +28,6 @@ int main(int argc, char* argv[])
 		printf("Error: Must be run as TTT [<filename>.txt]\n");
 	}
 	
-	
+	free(settings);	
 	return 0;
 }

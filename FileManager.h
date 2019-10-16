@@ -9,4 +9,7 @@ typedef struct
     int winCondition;
 } Settings;
 
+void loadSettings(Settings* settings, char* filename);
+/*** saveLogs ***/
+
 #endif
