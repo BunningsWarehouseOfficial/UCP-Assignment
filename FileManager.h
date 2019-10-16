@@ -10,6 +10,6 @@ typedef struct
 } Settings;
 
 void loadSettings(Settings* settings, char* filename);
-/*** saveLogs ***/
+void saveLogs();
 
 #endif
