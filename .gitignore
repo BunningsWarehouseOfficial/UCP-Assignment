@@ -1,4 +1,5 @@
 .vscode/c_cpp_properties.json
+settings.json
 FileManager.o
 Game.o
 UserInterface.o
