@@ -109,134 +109,164 @@ void displayBoard(char** board, int width, int height)
 /* PURPOSE:  */
 int hasWon(char** board, Settings* settings, char player, int x, int y)
 {
-    int width, height, w, coord, numLetter;
-    char letter;
     int hasWon = 0; /* "boolean" */
-    width = settings->width;
-    height = settings->height;
-    w = settings->winCondition;
 
-    /* Check row for matching letters */
+    hasWon = checkRow(board, player, settings, x, y);
+    if (hasWon == 0)
+    {
+        hasWon = checkColumn(board, player, settings, x, y);
+        if (hasWon == 0)
+        {
+            hasWon = checkDiagonals(board, player, settings, x, y);
+        }
+    }
+    return hasWon;
+}
+
+/* PURPOSE:  */
+int checkRow(char** board, char player, Settings* settings, int x, int y)
+{
+    int numLetter, coord, hasWon;
+    char letter;
+    hasWon = 0;
     numLetter = 1;
+    
+    /* Check left side */
     letter = player;
     coord = x - 1;
     while (coord >= 0 && letter == player)
-    {/* Check left side */
+    {
         letter = board[y][coord];
         if (letter == player)
             numLetter++;
 
         coord--;
     }
+    
+    /* Check right side */
     letter = player;
     coord = x + 1;
-    printf(">>> numL = %d\n", numLetter);
-    printf(">>> letter = %c\n", letter);
-    while (coord < width && letter == player)
-    {/* Check right side */
+    while (coord < settings->width && letter == player)
+    {
         letter = board[y][coord];
-        printf(">>> letter = %c\n", letter);
         if (letter == player)
             numLetter++;
 
-        printf(">>> numL = %d\n", numLetter);
         coord++;
     }
+    
+    if (numLetter == settings->winCondition)
+        hasWon = 1;
+    return hasWon;
+}
+
+/* PURPOSE:  */
+int checkColumn(char** board, char player, Settings* settings, int x, int y)
+{
+    int numLetter, coord, hasWon;
+    char letter;
+    hasWon = 0;
+    numLetter = 1;
+    
+    /* Check bottom side */
+    letter = player;
+    coord = y - 1;
+    while (coord >= 0 && letter == player)
+    {
+        letter = board[coord][x];
+        if (letter == player)
+            numLetter++;
+        
+        coord--;
+    }
+
+    /* Check top side */
+    letter = player;
+    coord = y + 1;
+    while (coord < settings->height && letter == player)
+    {
+        letter = board[coord][x];
+        if (letter == player)
+            numLetter++;
+        
+        coord++;
+    }
+    
+    if (numLetter == settings->winCondition)
+        hasWon = 1;
+    return hasWon;
+}
+
+/* PURPOSE:  */
+int checkDiagonals(char** board, char player, Settings* settings, int x, int y)
+{
+    int numLetter, xCoord, yCoord, hasWon, width, height, w;
+    char letter;
+    width = settings->width;
+    height = settings->height;
+    w = settings->winCondition;
+    hasWon = 0;
+    numLetter = 1;
+    
+    /* Check top left diagonal */
+    letter = player;
+    xCoord = x - 1;
+    yCoord = y - 1;
+    while (xCoord >= 0 && yCoord >= 0 && letter == player)
+    {
+        letter = board[yCoord][xCoord];
+        if (letter == player)
+            numLetter++;
+        xCoord--;
+        yCoord--;
+    }
+    
+    /* Check bottom right diagonal */
+    letter = player;
+    xCoord = x + 1;
+    yCoord = y + 1;
+    while (xCoord < width && yCoord < height && letter == player)
+    {
+        letter = board[yCoord][xCoord];
+        if (letter == player)
+            numLetter++;
+        xCoord++;
+        yCoord++;
+    } 
 
     if (numLetter == w)
         hasWon = 1;
     else
     {
-        /* Check column for matching letters */
         numLetter = 1;
+        /* Check top right diagonal */
         letter = player;
-        coord = y - 1;
-        while (coord >= 0 && letter == player)
-        {/* Check bottom side */
-            letter = board[coord][x];
+        xCoord = x + 1;
+        yCoord = y - 1;
+        while (xCoord < width && yCoord >= 0 && letter == player)
+        {
+            letter = board[yCoord][xCoord];
             if (letter == player)
                 numLetter++;
-            
-            coord--;
+            xCoord++;
+            yCoord--;
         }
+
+        /* Check bottom left diagonal */
         letter = player;
-        coord = y + 1;
-        while (coord < height && letter == player)
-        {/* Check top side */
-            letter = board[coord][x];
+        xCoord = x - 1;
+        yCoord = y + 1;
+        while (xCoord >= 0 && yCoord > height && letter == player)
+        {
+            letter = board[yCoord][xCoord];
             if (letter == player)
                 numLetter++;
-            
-            coord++;
+            xCoord--;
+            yCoord++;
         }
 
         if (numLetter == w)
             hasWon = 1;
-        else
-        {
-            /* Check 1st diagonal for matching letters */
-            int xCoord, yCoord;
-            numLetter = 1;
-            letter = player;
-            xCoord = x - 1;
-            yCoord = y - 1;
-            while (xCoord >= 0 && yCoord >= 0 && letter == player)
-            {/* Check top left diagonal */
-                letter = board[yCoord][xCoord];
-                if (letter == player)
-                    numLetter++;
-
-                xCoord--;
-                yCoord--;
-            }
-            letter = player;
-            xCoord = x + 1;
-            yCoord = y + 1;
-            while (xCoord < width && yCoord < height && letter == player)
-            {/* Check bottom right diagonal */
-                letter = board[yCoord][xCoord];
-                if (letter == player)
-                    numLetter++;
-
-                xCoord++;
-                yCoord++;
-            } 
-
-            if (numLetter == w)
-                hasWon = 1;
-            else
-            {
-                /* Check 2nd diagonal for matching letters */
-                numLetter = 1;
-                letter = player;
-                xCoord = x + 1;
-                yCoord = y - 1;
-                while (xCoord < width && yCoord >= 0 && letter == player)
-                {/* Check top right diagonal */
-                    letter = board[yCoord][xCoord];
-                    if (letter == player)
-                        numLetter++;
-
-                    xCoord++;
-                    yCoord--;
-                }
-                letter = player;
-                xCoord = x - 1;
-                yCoord = y + 1;
-                while (xCoord >= 0 && yCoord > height && letter == player)
-                {/* Check bottom left diagonal */
-                    letter = board[yCoord][xCoord];
-                    if (letter == player)
-                        numLetter++;
-
-                    xCoord--;
-                    yCoord++;
-                }
-
-                if (numLetter == w)
-                    hasWon = 1;
-            }
-        }
     }
     return hasWon;
 }
