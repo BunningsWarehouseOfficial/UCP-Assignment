@@ -37,16 +37,20 @@ void newGame(Settings* settings)
         {/* Placing player letter in selected tile when valid */
             board[y][x] = player;
 
-            if (turn == max)
+            end = hasWon(board, settings, player, x, y);
+            if (turn == max && end != 1)
             {
                 printf("\n");
                 displayBoard(board, width, height); /* Show the full board */
                 printf("The game is a tie!\n");
                 end = 2;
             }
-            else
+
+            if (end == 1)
             {
-                end = hasWon(board, settings, width, height, player);
+                printf("\n");
+                displayBoard(board, width, height); /* Show the winning board */
+                printf("Player %c won the game!\n", player);
             }
 
             if (player == 'X') /* Switching to next player */
@@ -55,12 +59,6 @@ void newGame(Settings* settings)
                 player = 'X';
             turn++;
         }
-    }
-    if (end == 1)
-    {
-        printf("\n");
-        displayBoard(board, width, height); /* Show the winning board */
-        printf("Player %c won the game!\n", player);
     }
 
     for (ff = 0; ff < width; ff++)
@@ -118,6 +116,7 @@ int hasWon(char** board, Settings* settings, char player, int x, int y)
     width = settings->width;
     height = settings->height;
     w = settings->winCondition;
+    letter = player;
 
     /* Check row for matching letters */
     coord = x - 1;
@@ -126,7 +125,7 @@ int hasWon(char** board, Settings* settings, char player, int x, int y)
         letter = board[y][coord];
         if (letter == player)
             numLetter++;
-        
+
         coord--;
     }
     coord = x + 1;
