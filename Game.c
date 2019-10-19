@@ -112,12 +112,12 @@ int hasWon(char** board, Settings* settings, char player, int x, int y)
     int width, height, w, coord, numLetter;
     char letter;
     int hasWon = 0; /* "boolean" */
-    numLetter = 1;
     width = settings->width;
     height = settings->height;
     w = settings->winCondition;
 
     /* Check row for matching letters */
+    numLetter = 1;
     letter = player;
     coord = x - 1;
     while (coord >= 0 && letter == player)
@@ -128,13 +128,18 @@ int hasWon(char** board, Settings* settings, char player, int x, int y)
 
         coord--;
     }
+    letter = player;
     coord = x + 1;
+    printf(">>> numL = %d\n", numLetter);
+    printf(">>> letter = %c\n", letter);
     while (coord < width && letter == player)
     {/* Check right side */
         letter = board[y][coord];
+        printf(">>> letter = %c\n", letter);
         if (letter == player)
             numLetter++;
 
+        printf(">>> numL = %d\n", numLetter);
         coord++;
     }
 
@@ -143,8 +148,8 @@ int hasWon(char** board, Settings* settings, char player, int x, int y)
     else
     {
         /* Check column for matching letters */
-        letter = player;
         numLetter = 1;
+        letter = player;
         coord = y - 1;
         while (coord >= 0 && letter == player)
         {/* Check bottom side */
@@ -154,6 +159,7 @@ int hasWon(char** board, Settings* settings, char player, int x, int y)
             
             coord--;
         }
+        letter = player;
         coord = y + 1;
         while (coord < height && letter == player)
         {/* Check top side */
@@ -170,8 +176,8 @@ int hasWon(char** board, Settings* settings, char player, int x, int y)
         {
             /* Check 1st diagonal for matching letters */
             int xCoord, yCoord;
-            letter = player;
             numLetter = 1;
+            letter = player;
             xCoord = x - 1;
             yCoord = y - 1;
             while (xCoord >= 0 && yCoord >= 0 && letter == player)
@@ -183,6 +189,7 @@ int hasWon(char** board, Settings* settings, char player, int x, int y)
                 xCoord--;
                 yCoord--;
             }
+            letter = player;
             xCoord = x + 1;
             yCoord = y + 1;
             while (xCoord < width && yCoord < height && letter == player)
@@ -193,15 +200,15 @@ int hasWon(char** board, Settings* settings, char player, int x, int y)
 
                 xCoord++;
                 yCoord++;
-            }
+            } 
 
             if (numLetter == w)
                 hasWon = 1;
             else
             {
                 /* Check 2nd diagonal for matching letters */
-                letter = player;
                 numLetter = 1;
+                letter = player;
                 xCoord = x + 1;
                 yCoord = y - 1;
                 while (xCoord < width && yCoord >= 0 && letter == player)
@@ -213,6 +220,7 @@ int hasWon(char** board, Settings* settings, char player, int x, int y)
                     xCoord++;
                     yCoord--;
                 }
+                letter = player;
                 xCoord = x - 1;
                 yCoord = y + 1;
                 while (xCoord >= 0 && yCoord > height && letter == player)
