@@ -3,7 +3,7 @@
 
 void menu(Settings* settings);
 void displaySettings(Settings* settings);
-void displayLogs();
+void freeGameLog(void* gameLog);
 void editSettings(Settings* settings);
 
 #endif

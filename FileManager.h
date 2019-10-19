@@ -1,8 +1,6 @@
 #ifndef FILEMANAGER_H
 #define FILEMANAGER_H
 
-#define MAX 38 /* Max board size */
-
 /* PURPOSE:  */
 typedef struct 
 {
@@ -12,6 +10,7 @@ typedef struct
 } Settings;
 
 void loadSettings(Settings* settings, char* filename);
-void saveLogs();
+void saveLogs(Settings* settings, LinkedList* log);
+void displayLogs(FILE* stream, Settings* settings, LinkedList* log);
 
 #endif

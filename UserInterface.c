@@ -1,14 +1,14 @@
 /* Filename:           UserInterface.c
    Author:             Kristian Rados (19764285)
    Date Created:       13/10/2019
-   Date Last Modified: 17/10/2019
+   Date Last Modified: 19/10/2019
    Purpose: __________________________________________________________________*/
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "LinkedList.h"
 #include "FileManager.h"
 #include "UserInterface.h"
-#include "LinkedList.h" /*** Is this needed? ***/
 #include "Game.h"
 
 /* PURPOSE:  */
@@ -40,7 +40,10 @@ void menu(Settings* settings)
 	int cmd, upper;
 	char *prompt, *str, *end;
 	char temp[BUFFER];
+	LinkedList *log, *game;
+	log = createLinkedList();
 	str = NULL;
+
 	#ifdef EDITOR
 	prompt = "\n================= \n[1] New Game \n[2] View Settings \n"
 	         "[3] View Logs \n[4] Save Logs \n[5] Edit Settings \n[0] Exit \n"
@@ -72,16 +75,18 @@ void menu(Settings* settings)
 			switch (cmd)
 			{
 				case 1:
-					newGame(settings);
+					game = newGame(settings);
+					insertLast(log, game);
 					break;
 				case 2:
 					displaySettings(settings);
 					break;
 				case 3:
-					displayLogs();
+					printf("\n");
+					displayLogs(stdout, settings, log);
 					break;
 				case 4:
-					saveLogs(/*** IMPORT ***/);
+					saveLogs(settings, log);
 					break;
 				#ifdef EDITOR
 				case 5:
@@ -93,6 +98,8 @@ void menu(Settings* settings)
 				printf("%s", prompt);
 		}
 	} while (cmd != 0);
+	
+	freeLinkedList(log, &freeGameLog);
 }
 
 /* PURPOSE:  */
@@ -104,9 +111,10 @@ void displaySettings(Settings* settings)
 }
 
 /* PURPOSE:  */
-void displayLogs()
+void freeGameLog(void* gameLog)
 {
-
+	LinkedList* games = (LinkedList*)gameLog;
+	freeLinkedList(games, &free);
 }
 
 #ifdef EDITOR

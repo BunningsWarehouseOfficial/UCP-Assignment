@@ -2,8 +2,18 @@
 #define GAME_H
 
 #define BUFFER 256
+#define MAX 38 /* Max board size */
 
-void newGame(Settings* settings);
+/* PURPOSE:  */
+typedef struct
+{
+    int turn;
+    char player;
+    int x;
+    int y;
+} Turn;
+
+LinkedList* newGame(Settings* settings);
 void displayBoard(char** board, int width, int height);
 
 int hasWon(char** board, Settings* settings, char player, int x, int y);

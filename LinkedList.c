@@ -1,7 +1,7 @@
 /* Filename:           LinkedList.c
  * Author:             Kristian Rados (19764285)
  * Date Created:       02/10/2019
- * Date Last Modified: 15/10/2019
+ * Date Last Modified: 19/10/2019
  * Purpose: __________________________________________________________________*/
 
 #include <stdlib.h>
@@ -134,7 +134,7 @@ void printLinkedList(LinkedList* list, void (*print)(void*))
 }
 
 /* PURPOSE:  */
-void freeLinkedList(LinkedList* list, void (*freeNode)(void*))
+void freeLinkedList(LinkedList* list, FreeFn freeNode)
 {
     LinkedListNode *current;
 

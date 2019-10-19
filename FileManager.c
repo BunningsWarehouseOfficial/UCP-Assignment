@@ -1,11 +1,14 @@
 /* Filename:           FileManager.c
    Author:             Kristian Rados (19764285)
    Date Created:       13/10/2019
-   Date Last Modified: 16/10/2019
+   Date Last Modified: 19/10/2019
    Purpose: __________________________________________________________________*/
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
+#include "LinkedList.h"
 #include "FileManager.h"
+#include "Game.c"
 
 /* PURPOSE:  */
 void loadSettings(Settings* settings, char* filename)
@@ -122,11 +125,78 @@ void loadSettings(Settings* settings, char* filename)
 }
 
 /* PURPOSE:  */
-void saveLogs()
+void saveLogs(Settings* settings, LinkedList* log)
 {
     #ifdef SECRET
     printf("Error: This function has been disabled\n");
     #else
+    
+    FILE* f;
+    time_t rawTime;
+    struct tm *local;
+    int m, n, k, hour, min, day, month;
+    char filename[26];
+
+    time(&rawTime); /* Retrieve current system time */
+    local = localtime(&rawTime); /* Create local time struct */
+    m = settings->width;
+    n = settings->height;
+    k = settings->winCondition;
+    hour = local->tm_hour;
+    min = local->tm_min;
+    day = local->tm_mday;
+    month = local->tm_mon + 1; /* Creating logfile filename */
+    sprintf(filename, "MNK_%d-%d-%d_%d-%d_%d-%d.log", m, n, k, hour, min,
+            day, month);
+
+    f = fopen(filename, "w");
+    displayLogs(f, settings, log);
+    fclose(f);
 
     #endif
+}
+
+/* PURPOSE:  */
+void displayLogs(FILE* stream, Settings* settings, LinkedList* log)
+{
+	int gameCount, turnCount, ii, jj;
+	LinkedListNode *game, *turn;
+    Turn* data;
+    game = log->head;
+    turn = NULL;
+	gameCount = turnCount = 0;
+
+	/* Settings (most recent) */
+	fprintf(stream, "SETTINGS:\n    M: %d\n    N: %d\n    K: %d\n\n",
+	        settings->width, settings->height, settings->winCondition);
+
+	while (game != NULL)
+	{/* Counting how many games there were */
+		gameCount++;
+		game = game->next;
+	}
+    if (gameCount != 0)
+    {
+        game = log->head; /* Reinitialise game */
+        turn = ((LinkedList*)game->data)->head;
+        for (ii = 1; ii <= gameCount; ii++)
+        {/* Iterating through each game */
+            fprintf(stream, "GAME %d:\n", ii);
+            while (turn != NULL)
+            {/* Counting how many turns this game had */
+                turnCount++;
+                turn = turn->next;
+            }
+
+            turn = ((LinkedList*)game->data)->head; /* Reinitialise turn */
+            for (jj = 1; jj <= turnCount; jj++)
+            {/* Iterating through each turn */
+                data = turn->data;
+                fprintf(stream, "    Turn: %d\n    Player: %c\n    Location: "
+                       "%d,%d\n\n", data->turn, data->player, data->x, data->y);
+                turn = turn->next;
+            }
+            game = game->next;
+        }
+    }
 }

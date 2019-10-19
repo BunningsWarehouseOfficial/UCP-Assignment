@@ -1,31 +1,36 @@
 /* Filename:           UserInterface.c
    Author:             Kristian Rados (19764285)
    Date Created:       13/10/2019
-   Date Last Modified: 17/10/2019
+   Date Last Modified: 19/10/2019
    Purpose: __________________________________________________________________*/
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "LinkedList.h"
 #include "FileManager.h"
 #include "Game.h"
 
 /* PURPOSE:  */
-void newGame(Settings* settings)
+LinkedList* newGame(Settings* settings)
 {
+    LinkedList* game;
+    Turn* turn;
     char** board;
     char player;
-    int ff, height, width, max, turn, x, y;
+    int ff, height, width, max, turnNo, x, y;
     int end = 0;
+    game = createLinkedList();
+    turn = {0, 0, 0, 0};
     height = settings->height;
     width = settings->width;
     max = height * width; /* Used to test for tie */
     player = 'X'; /* X always goes first */
-    turn = 1;
+    turnNo = 1;
 
     board = createBoard(width, height);
     while (end == 0)
     {
-        printf("\nTurn %d, Player %c\n", turn, player);
+        printf("\nTurn %d, Player %c\n", turnNo, player);
         displayBoard(board, width, height);
         
         coordInput(width, height, &x, &y, player); /* Retrieving user input */
@@ -36,9 +41,15 @@ void newGame(Settings* settings)
         else
         {/* Placing player letter in selected tile when valid */
             board[y][x] = player;
+            /* Recording the turn for the logs */
+            turn->turn = turnNo;
+            turn->player = player;
+            turn->x = x;
+            turn->y = y;
+            insertLast(game, turn);
 
             end = hasWon(board, settings, player, x, y);
-            if (turn == max && end != 1)
+            if (turnNo == max && end != 1)
             {
                 printf("\n");
                 displayBoard(board, width, height); /* Show the full board */
@@ -57,7 +68,7 @@ void newGame(Settings* settings)
                 player = 'O';
             else
                 player = 'X';
-            turn++;
+            turnNo++;
         }
     }
 
@@ -66,6 +77,7 @@ void newGame(Settings* settings)
         free(board[ff]);
     }
     free(board);
+    return game;
 }
 
 /* PURPOSE:  */
