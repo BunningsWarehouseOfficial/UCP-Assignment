@@ -61,7 +61,7 @@ void newGame(Settings* settings)
         }
     }
 
-    for (ff = 0; ff < width; ff++)
+    for (ff = 0; ff < height; ff++)
     {/* Freeing the board */
         free(board[ff]);
     }
@@ -116,9 +116,9 @@ int hasWon(char** board, Settings* settings, char player, int x, int y)
     width = settings->width;
     height = settings->height;
     w = settings->winCondition;
-    letter = player;
 
     /* Check row for matching letters */
+    letter = player;
     coord = x - 1;
     while (coord >= 0 && letter == player)
     {/* Check left side */
@@ -129,7 +129,7 @@ int hasWon(char** board, Settings* settings, char player, int x, int y)
         coord--;
     }
     coord = x + 1;
-    while (coord <= width && letter == player)
+    while (coord < width && letter == player)
     {/* Check right side */
         letter = board[y][coord];
         if (letter == player)
@@ -143,6 +143,7 @@ int hasWon(char** board, Settings* settings, char player, int x, int y)
     else
     {
         /* Check column for matching letters */
+        letter = player;
         numLetter = 1;
         coord = y - 1;
         while (coord >= 0 && letter == player)
@@ -154,7 +155,7 @@ int hasWon(char** board, Settings* settings, char player, int x, int y)
             coord--;
         }
         coord = y + 1;
-        while (coord <= width && letter == player)
+        while (coord < height && letter == player)
         {/* Check top side */
             letter = board[coord][x];
             if (letter == player)
@@ -169,6 +170,7 @@ int hasWon(char** board, Settings* settings, char player, int x, int y)
         {
             /* Check 1st diagonal for matching letters */
             int xCoord, yCoord;
+            letter = player;
             numLetter = 1;
             xCoord = x - 1;
             yCoord = y - 1;
@@ -177,14 +179,20 @@ int hasWon(char** board, Settings* settings, char player, int x, int y)
                 letter = board[yCoord][xCoord];
                 if (letter == player)
                     numLetter++;
+
+                xCoord--;
+                yCoord--;
             }
             xCoord = x + 1;
             yCoord = y + 1;
-            while (xCoord <= width && yCoord <= height && letter == player)
-            {/* Check bottom left diagonal */
+            while (xCoord < width && yCoord < height && letter == player)
+            {/* Check bottom right diagonal */
                 letter = board[yCoord][xCoord];
                 if (letter == player)
                     numLetter++;
+
+                xCoord++;
+                yCoord++;
             }
 
             if (numLetter == w)
@@ -192,22 +200,29 @@ int hasWon(char** board, Settings* settings, char player, int x, int y)
             else
             {
                 /* Check 2nd diagonal for matching letters */
+                letter = player;
                 numLetter = 1;
-                xCoord = x - 1;
-                yCoord = y + 1;
-                while (xCoord >= 0 && yCoord >= height && letter == player)
-                {/* Check top left diagonal */
+                xCoord = x + 1;
+                yCoord = y - 1;
+                while (xCoord < width && yCoord >= 0 && letter == player)
+                {/* Check top right diagonal */
                     letter = board[yCoord][xCoord];
                     if (letter == player)
                         numLetter++;
+
+                    xCoord++;
+                    yCoord--;
                 }
-                xCoord = x + 1;
-                yCoord = y - 1;
-                while (xCoord <= width && yCoord <= 0 && letter == player)
+                xCoord = x - 1;
+                yCoord = y + 1;
+                while (xCoord >= 0 && yCoord > height && letter == player)
                 {/* Check bottom left diagonal */
                     letter = board[yCoord][xCoord];
                     if (letter == player)
                         numLetter++;
+
+                    xCoord--;
+                    yCoord++;
                 }
 
                 if (numLetter == w)
