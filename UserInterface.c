@@ -37,12 +37,20 @@ int main(int argc, char* argv[])
 /* PURPOSE:  */
 void menu(Settings* settings)
 {			
-	int cmd;
+	int cmd, upper;
 	char *prompt, *str, *end;
 	char temp[BUFFER];
 	str = NULL;
+	#ifdef EDITOR
 	prompt = "\n================= \n[1] New Game \n[2] View Settings \n"
-	         "[3] View Logs \n[4] Save Logs \n[5] Exit \n=================\n\n";
+	         "[3] View Logs \n[4] Save Logs \n[5] Edit Settings \n[0] Exit \n"
+			 "=================\n\n";
+	upper = 5;
+	#else
+	prompt = "\n================= \n[1] New Game \n[2] View Settings \n"
+	         "[3] View Logs \n[4] Save Logs \n[0] Exit \n=================\n\n";
+	upper = 4;
+	#endif
 
 	printf("\nM-N-K Tic Tac Toe\nby Kristian Rados\n%s", prompt);
 	do
@@ -54,10 +62,10 @@ void menu(Settings* settings)
 		{/* Checking for 'dirty' and/or otherwise invalid input */
 			printf("Error: Please enter a single digit number\n");
 		}
-		else if (cmd < 1 || cmd > 5)
+		else if (cmd < 0 || cmd > upper)
 		{/* Checking that input is in valid range */
 			printf("Error: Input out of valid range, please enter a number "
-				   "between 1 and 5 (inclusive)\n");
+				   "between 1 and %d (inclusive)\n", upper);
 		}
 		else
 		{
@@ -75,11 +83,16 @@ void menu(Settings* settings)
 				case 4:
 					saveLogs(/*** IMPORT ***/);
 					break;
+				#ifdef EDITOR
+				case 5:
+					editSettings(settings);
+					break;
+				#endif
 			}
-			if (cmd != 5)
+			if (cmd != 0)
 				printf("%s", prompt);
 		}
-	} while (cmd != 5);
+	} while (cmd != 0);
 }
 
 /* PURPOSE:  */
@@ -95,3 +108,71 @@ void displayLogs()
 {
 
 }
+
+#ifdef EDITOR
+/* PURPOSE:  */
+void editSettings(Settings* settings)
+{
+    int valid, input, value;
+    char temp[BUFFER]; /* Used for input */
+	char s;
+	char *prompt, *str, *end;
+	str = NULL;
+	prompt = "\nWhich setting would you like to edit? \n[M] Width \n"
+			 "[N] Height \n[K] Win Condition\n\n";	
+    
+	printf("%s", prompt);
+    do
+    {    
+        valid = 1;
+		printf("> ");
+		fgets(temp, BUFFER, stdin); /* Retrieving user input */
+        input = sscanf(temp, "%c\n", &s); /* Parsing value from user input */
+        if (input != 1)
+        {/* Checking that user's input is a letter */
+            printf("Error: Invalid selection, please enter a letter\n");
+            valid = 0;
+        }
+        else if (s!='M' && s!='N' && s!='K' && s!='m' && s!='n' && s!='k')
+        {/* Checking for correct letter */
+            printf("Error: Invalid selection, please enter either M, N or K\n");
+            valid = 0;
+        }
+		else
+		{
+			printf("\nWhat value are you changing {%c} to?\n\n", s);
+			printf("> ");
+			str = fgets(temp, BUFFER, stdin); /* Retrieving user input */
+			value = strtol(temp, &end, 10); /* Parsing value from user input */
+			if (str == NULL || strcmp(str, end) == 0 || strcmp(end, "\n") != 0)
+			{/* Checking for 'dirty' and/or otherwise invalid input */
+				printf("Error: Value must be a single digit number\n");
+			}
+			else if (value <= 1)
+			{/* Checking that input is in valid range */
+				printf("Error: Settings values must be > 1\n");
+			}
+			else if (value > MAX)
+			{/* Checking that input is in valid range */
+				printf("Error: Settings values must be <= MAX\n");
+			}
+			else
+			{
+				switch (s)
+				{/* Changing the chosen setting if value is valid */
+					case 'M': case 'm':
+						settings->width = value;
+						break;
+					case 'N': case 'n':
+						settings->height = value;
+						break;
+					case 'K': case 'k':
+						settings->winCondition = value;
+						break;
+				}
+			}
+			
+		}
+    } while (valid == 0);
+}
+#endif

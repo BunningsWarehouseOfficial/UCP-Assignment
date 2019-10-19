@@ -3,6 +3,16 @@ CFLAGS = -Wall -ansi -pedantic -Werror -std=c89 -g
 OBJ = UserInterface.o FileManager.o Game.o LinkedList.o
 EXEC = mnk
 
+ifdef SECRET
+CFLAGS += -D SECRET
+SECRET : clean $(EXEC)
+endif
+
+ifdef EDITOR
+CFLAGS += -D EDITOR
+EDITOR : clean $(EXEC)
+endif
+
 $(EXEC) : $(OBJ)
 	$(CC) $(OBJ) -o $(EXEC)
 

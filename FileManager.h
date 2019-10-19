@@ -1,6 +1,8 @@
 #ifndef FILEMANAGER_H
 #define FILEMANAGER_H
 
+#define MAX 38 /* Max board size */
+
 /* PURPOSE:  */
 typedef struct 
 {

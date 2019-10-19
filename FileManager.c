@@ -43,9 +43,14 @@ void loadSettings(Settings* settings, char* filename)
                        "for each line should be A=x, where A = M, N or K\n");
                 valid = 0;
             }
-            else if (v <= 1) /*** NEGATIVES ARE CAUGHT ABOVE??? ***/
+            else if (v <= 1)
             {/* Checking that value is in correct range */
                 printf("Error: Settings values must be > 1\n");
+                valid = 0;
+            }
+            else if (v > MAX)
+            {/* Checking that value is in correct range */
+                printf("Error: Settings values must be <= MAX\n");
                 valid = 0;
             }
             else
@@ -95,11 +100,6 @@ void loadSettings(Settings* settings, char* filename)
         order to avoid multiple error messages */
         else if (valid == 1) 
         {
-            /***if (ii != 3) ==== MAY BE REDUNDANT, CAUGHT AS DUPLICATE ERROR
-            {/ Checking for invalid number of lines /
-                printf("Error: There is an incorrect number of lines in the "
-                       "settings file, there should be exactly 3\n");
-            } ***/
             if (width == 0 || height == 0 || winCondition == 0)
             {/* Checking that there are no missing settings values */
                 printf("Error: File does not have all 3 required settings, "
@@ -124,5 +124,9 @@ void loadSettings(Settings* settings, char* filename)
 /* PURPOSE:  */
 void saveLogs()
 {
+    #ifdef SECRET
+    printf("Error: This function has been disabled\n");
+    #else
 
+    #endif
 }
