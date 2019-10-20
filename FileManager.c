@@ -201,7 +201,7 @@ void displayLogs(FILE* stream, Settings* settings, LinkedList* log)
             }
             game = game->next;
         }
-        if (stream == stdout) /* Prevent unnecessary spacing at end of file */
-            fprintf(stream, "\n");
     }
+    if (stream == stdout) /* Prevent unnecessary spacing at end of file */
+        fprintf(stream, "\n");
 }
