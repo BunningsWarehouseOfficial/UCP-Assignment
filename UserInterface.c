@@ -2,7 +2,10 @@
    Author:             Kristian Rados (19764285)
    Date Created:       13/10/2019
    Date Last Modified: 20/10/2019
-   Purpose: __________________________________________________________________*/
+   Purpose: Handles the user interface for MNK Tic Tac Toe, which includes
+   			housing the main() function for the program. This means it handles
+			displaying and controlling any menus and thus calling other
+			fundamental parts of the program when required.                   */
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -11,7 +14,9 @@
 #include "UserInterface.h"
 #include "Game.h"
 
-/* PURPOSE:  */
+/* PURPOSE:
+The main() function for the program. It preloads the game settings and if they
+are valid the rest of the program is called and run. */
 int main(int argc, char* argv[])
 {
 	if (argc == 2)
@@ -34,7 +39,11 @@ int main(int argc, char* argv[])
 	return 0;
 }
 
-/* PURPOSE:  */
+/* PURPOSE:
+The main menu for the program. Prompts the user for input to select what they
+would like to do in the program and calls relevant functions based on their
+selection. The majority of the program is run from calls by this menu. The game
+logs are also created and controlled here. */
 void menu(Settings* settings)
 {			
 	int cmd, upper;
@@ -102,7 +111,9 @@ void menu(Settings* settings)
 	freeLinkedList(log, &freeGameLog);
 }
 
-/* PURPOSE:  */
+/* PURPOSE:
+Displays game settings to the user. Made as a seperate function to keep the
+structure of the menu function clear. */
 void displaySettings(Settings* settings)
 {
 	printf("\n(M) Width         = %d tiles\n(N) Height        = %d tiles\n"
@@ -110,7 +121,11 @@ void displaySettings(Settings* settings)
 		   settings->height, settings->winCondition);
 }
 
-/* PURPOSE:  */
+/* PURPOSE:
+The data type of the logs Linked List is another Linked List containing games,
+so this function is imported to the first freeLinkedList() call to tell it
+that to free each node, another Linked List must be free'd using the basic
+free() built-in function for the node data. */
 void freeGameLog(void* gameLog)
 {
 	LinkedList* games = (LinkedList*)gameLog;
@@ -118,7 +133,11 @@ void freeGameLog(void* gameLog)
 }
 
 #ifdef EDITOR
-/* PURPOSE:  */
+/* PURPOSE:
+Only runs when program is compiled with EDITOR defined as true. Allows the user
+to choose and then change one of the game's settings values during runtime.
+Changed values persist through the program via the settings struct, so the log
+file will only show the most recent settings. */
 void editSettings(Settings* settings)
 {
     int valid, input, value;

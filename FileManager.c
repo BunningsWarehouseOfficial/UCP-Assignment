@@ -2,7 +2,10 @@
    Author:             Kristian Rados (19764285)
    Date Created:       13/10/2019
    Date Last Modified: 20/10/2019
-   Purpose: __________________________________________________________________*/
+   Purpose: Manages all file input and output for MNK Tic Tac Toe. This involves
+            loading and validating the game's settings files and saving game log
+            files via a "display" function that is either used to save to a file
+            or display to the user via the terminal.                          */
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
@@ -10,7 +13,13 @@
 #include "FileManager.h"
 #include "Game.h"
 
-/* PURPOSE:  */
+/* PURPOSE:
+This function is always called before the main program and determines whether or
+not the rest of the program runs. It opens a file specified by the user's
+command line parameter and validates that it is of the correct format and that
+the values are valid. If the settings file is valid, the settings are assigned
+to a struct and the rest of the program is run, with this settings struct
+passed throught the program. */
 void loadSettings(Settings* settings, char* filename)
 {
     FILE *f;
@@ -124,7 +133,12 @@ void loadSettings(Settings* settings, char* filename)
     }
 }
 
-/* PURPOSE:  */
+/* PURPOSE:
+Only runs when the program is compiled with SECRET defined as false, otherwise
+it is disabled. Saves all the current game logs to a file. The file's name is
+generated based on the current game settings, the current local time and the
+current local date. Calls the displayLogs() function, but redirects the
+"displayed" logs to the file rather than the terminal. */
 void saveLogs(Settings* settings, LinkedList* log)
 {
     #ifdef SECRET
@@ -150,13 +164,16 @@ void saveLogs(Settings* settings, LinkedList* log)
             min, day, month);
 
     f = fopen(filename, "w");
-    displayLogs(f, settings, log);
+    displayLogs(f, settings, log); /* "Printing" to the new file */
     fclose(f);
 
     #endif
 }
 
-/* PURPOSE:  */
+/* PURPOSE:
+Iterates through the game logs and prints the. Imports a FILE* so that they can
+be either displayed to the user through printing to the terminal (stdout) or
+be "printed" to a file, saving the information. */
 void displayLogs(FILE* stream, Settings* settings, LinkedList* log)
 {
 	int gameCount, turnCount, ii, jj;

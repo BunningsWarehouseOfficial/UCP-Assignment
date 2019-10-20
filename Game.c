@@ -2,7 +2,11 @@
    Author:             Kristian Rados (19764285)
    Date Created:       13/10/2019
    Date Last Modified: 20/10/2019
-   Purpose: __________________________________________________________________*/
+   Purpose: Handles the actual gameplay for MNK Tic Tac Toe. This involves
+            creating, managing, displaying and adding to a new game board, as
+            well as creating and managing the log entry for this new game.
+            Player moves are handled here and any victories or ties are also
+            determined here.                                                  */
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -10,7 +14,12 @@
 #include "FileManager.h"
 #include "Game.h"
 
-/* PURPOSE:  */
+/* PURPOSE:
+Starts a brand new Tic Tac Toe game using the current game settings. It creates
+and manages the board and also manages generating the necessary logs for this
+game. The enirety of the actual Tic Tac Toe gameplay is handled by this
+function as it handles displaying the board, placing new tiles, checking for a
+winner and checking for a tie. */
 LinkedList* newGame(Settings* settings)
 {
     LinkedList* game;
@@ -22,7 +31,7 @@ LinkedList* newGame(Settings* settings)
     game = createLinkedList();
     height = settings->height;
     width = settings->width;
-    max = height * width; /* Used to test for tie */
+    max = height * width; /* Used to test for a tie */
     player = 'X'; /* X always goes first */
     turnNo = 1;
 
@@ -48,9 +57,9 @@ LinkedList* newGame(Settings* settings)
             turn->y = y;
             insertLast(game, turn);
 
-            end = hasWon(board, settings, player, x, y);
+            end = hasWon(board, settings, player, x, y); /* Check for winner */
             if (turnNo == max && end != 1)
-            {
+            {/* Checking for a tie */
                 printf("\n");
                 displayBoard(board, width, height); /* Show the full board */
                 printf("The game is a tie!\n");
@@ -58,7 +67,7 @@ LinkedList* newGame(Settings* settings)
             }
 
             if (end == 1)
-            {
+            {/* Informing the users of a winner */
                 printf("\n");
                 displayBoard(board, width, height); /* Show the winning board */
                 printf("Player %c won the game!\n", player);
@@ -72,15 +81,19 @@ LinkedList* newGame(Settings* settings)
         }
     }
 
+    /* Freeing the board */
     for (ff = 0; ff < height; ff++)
-    {/* Freeing the board */
+    {
         free(board[ff]);
     }
     free(board);
     return game;
 }
 
-/* PURPOSE:  */
+/* PURPOSE:
+Translates the literal board that is stored in a two dimensional array into a
+visual representation of the board that is somewhat pleasing aesthetically so
+that it can be printed to the terminal for the user to track the game. */
 void displayBoard(char** board, int width, int height)
 {
     int aa, ii, jj;
@@ -118,7 +131,10 @@ void displayBoard(char** board, int width, int height)
     free(barInner);
 }
 
-/* PURPOSE:  */
+/* PURPOSE:
+Checks the board for any patterns that would indicate that the player who just
+placed a new tile has won the game or not depending on the win condition defined
+by the settings struct. */
 int hasWon(char** board, Settings* settings, char player, int x, int y)
 {
     int hasWon = 0; /* "boolean" */
@@ -135,7 +151,9 @@ int hasWon(char** board, Settings* settings, char player, int x, int y)
     return hasWon;
 }
 
-/* PURPOSE:  */
+/* PURPOSE:
+Checks for tiles of the same type as the player in the same row as where the
+player just placed a tile. */
 int checkRow(char** board, char player, Settings* settings, int x, int y)
 {
     int numLetter, coord, hasWon;
@@ -167,12 +185,14 @@ int checkRow(char** board, char player, Settings* settings, int x, int y)
         coord++;
     }
     
-    if (numLetter == settings->winCondition)
+    if (numLetter >= settings->winCondition)
         hasWon = 1;
     return hasWon;
 }
 
-/* PURPOSE:  */
+/* PURPOSE:
+Checks for tiles of the same type as the player in the same column as where the
+player just placed a tile. */
 int checkColumn(char** board, char player, Settings* settings, int x, int y)
 {
     int numLetter, coord, hasWon;
@@ -204,12 +224,14 @@ int checkColumn(char** board, char player, Settings* settings, int x, int y)
         coord++;
     }
     
-    if (numLetter == settings->winCondition)
+    if (numLetter >= settings->winCondition)
         hasWon = 1;
     return hasWon;
 }
 
-/* PURPOSE:  */
+/* PURPOSE:
+Checks for tiles of the same type as the player in both of the diagonals that
+extend out from where the player just placed a tile. */
 int checkDiagonals(char** board, char player, Settings* settings, int x, int y)
 {
     int numLetter, xCoord, yCoord, hasWon, width, height, w;
@@ -246,7 +268,7 @@ int checkDiagonals(char** board, char player, Settings* settings, int x, int y)
         yCoord++;
     } 
 
-    if (numLetter == w)
+    if (numLetter >= w)
         hasWon = 1;
     else
     {
@@ -277,13 +299,16 @@ int checkDiagonals(char** board, char player, Settings* settings, int x, int y)
             yCoord++;
         }
 
-        if (numLetter == w)
+        if (numLetter >= w)
             hasWon = 1;
     }
     return hasWon;
 }
 
-/* PURPOSE:  */
+/* PURPOSE:
+Handles user input for the game itself, determining the coordinates in which
+the current player would like to place their tile. Ensures that the user's
+input is both valid and within the correct range. */
 void coordInput(int width, int height, int* x, int* y, char player)
 {
     int valid, input;
@@ -315,15 +340,20 @@ void coordInput(int width, int height, int* x, int* y, char player)
     while (valid == 0);
 }
 
-/* PURPOSE:  */
+/* PURPOSE:
+Creates a new board for this game by allocating memory on the heap for a two
+dimensional array of characters with a size determined by the current game
+dimensions as defined by the settings struct (but imported individually). */
 char** createBoard(int width, int height)
 {
     int ii, jj;
     char** board;
 
+    /* Creating array of arrays (y dimension) */
     board = (char**)malloc(height * sizeof(char*));
     for (ii = 0; ii < height; ii++)
     {
+        /* Creating array for each element of previous array (x dimension) */
         board[ii] = (char*)malloc(width * sizeof(char));
         for (jj = 0; jj < width; jj++)
         {/* Initialising as space characters, allows for easier printing */

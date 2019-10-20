@@ -2,13 +2,17 @@
  * Author:             Kristian Rados (19764285)
  * Date Created:       02/10/2019
  * Date Last Modified: 20/10/2019
- * Purpose: __________________________________________________________________*/
+ * Purpose: All the necessary functions to implement a double-headed and 
+            doubly-linked Linked List data structure that is properly generic.
+            Taken from work done for UCP practical 7.                         */
 
 #include <stdlib.h>
-#include <stdio.h> /*** Is this needed? ***/
+#include <stdio.h>
 #include "LinkedList.h"
 
-/* PURPOSE:  */
+/* PURPOSE:
+Creates the central Linked List struct from which the rest of the List extends
+from and is allocated on the heap. */
 LinkedList* createLinkedList()
 {/* creating central list */
     LinkedList* list = (LinkedList*)malloc(sizeof(LinkedList));
@@ -17,7 +21,9 @@ LinkedList* createLinkedList()
     return list;
 }
 
-/* PURPOSE:  */
+/* PURPOSE:
+Allocates a new node for the Linked List in the heap, assigns its associated
+data and then inserts it to the start of the List as the new head. */
 void insertStart(LinkedList* list, void* data)
 {
     LinkedListNode* newNode = (LinkedListNode*)malloc(sizeof(LinkedListNode));
@@ -40,7 +46,9 @@ void insertStart(LinkedList* list, void* data)
     }
 }
 
-/* PURPOSE:  */
+/* PURPOSE:
+Retrieves the data stored inside the first node in the List (ie. the head) and
+then removes the node from the list, disconnecting it and freeing its memory. */
 void* removeStart(LinkedList* list)
 {
     void* removed;
@@ -69,7 +77,9 @@ void* removeStart(LinkedList* list)
     return removed;
 }
 
-/* PURPOSE:  */
+/* PURPOSE:
+Allocates a new node for the Linked List in the heap, assigns its associated
+data and then inserts it to the end of the List as the new tail. */
 void insertLast(LinkedList* list, void* data)
 {
     LinkedListNode* newNode = (LinkedListNode*)malloc(sizeof(LinkedListNode));
@@ -92,7 +102,9 @@ void insertLast(LinkedList* list, void* data)
     }
 }
 
-/* PURPOSE:  */
+/* PURPOSE:
+Retrieves the data stored inside the last node in the List (ie. the tail) and
+then removes the node from the list, disconnecting it and freeing its memory. */
 void* removeLast(LinkedList* list)
 {
     void* removed;
@@ -122,18 +134,25 @@ void* removeLast(LinkedList* list)
     return removed;
 }
 
-/* PURPOSE:  */
-void printLinkedList(LinkedList* list, void (*print)(void*))
+/* PURPOSE:
+Iterates through each node in the List and uses an imported function pointer to
+print the data stored within each node. Imported function allows for generic
+printing of whatever data is stored within the List. */
+void printLinkedList(LinkedList* list, PrintFn printNode)
 {
     LinkedListNode* current = list->head; /* cursor for iterating through */
     while (current != NULL)
     {
-        (*print)(current->data);
+        (*printNode)(current->data);
         current = current->next;
     }
 }
 
-/* PURPOSE:  */
+/* PURPOSE:
+Iterates through each node in the list and uses an imported function pointer to
+free the memory for each node's data. After the data is freed, the node itself
+is also freed. When all nodes in the List have been freed, the List itself is
+free, hence 'deleting' the List. &free can imported for simple data. */
 void freeLinkedList(LinkedList* list, FreeFn freeNode)
 {
     LinkedListNode *node, *nextNode;

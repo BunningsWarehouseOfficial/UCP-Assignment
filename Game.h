@@ -4,7 +4,9 @@
 #define BUFFER 256
 #define MAX 38 /* Max board size */
 
-/* PURPOSE:  */
+/* PURPOSE:
+Defining a struct that stores all the information about a single turn from a 
+game so that it can be stored under a single node in the logs Linked List. */
 typedef struct
 {
     int turn;
