@@ -1,7 +1,7 @@
 /* Filename:           LinkedList.c
  * Author:             Kristian Rados (19764285)
  * Date Created:       02/10/2019
- * Date Last Modified: 19/10/2019
+ * Date Last Modified: 20/10/2019
  * Purpose: __________________________________________________________________*/
 
 #include <stdlib.h>
@@ -136,14 +136,15 @@ void printLinkedList(LinkedList* list, void (*print)(void*))
 /* PURPOSE:  */
 void freeLinkedList(LinkedList* list, FreeFn freeNode)
 {
-    LinkedListNode *current;
+    LinkedListNode *node, *nextNode;
 
-    current = list->head;
-    while (current != NULL)
+    node = list->head;
+    while (node != NULL)
     {
-        (*freeNode)(current->data);
-        free(current);
-        current = current->next;
+        nextNode = node->next;
+        (*freeNode)(node->data);
+        free(node);
+        node = nextNode;
     }
     free(list);
 }

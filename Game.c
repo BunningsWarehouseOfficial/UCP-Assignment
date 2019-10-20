@@ -1,7 +1,7 @@
 /* Filename:           UserInterface.c
    Author:             Kristian Rados (19764285)
    Date Created:       13/10/2019
-   Date Last Modified: 19/10/2019
+   Date Last Modified: 20/10/2019
    Purpose: __________________________________________________________________*/
 #include <stdlib.h>
 #include <stdio.h>
@@ -14,13 +14,12 @@
 LinkedList* newGame(Settings* settings)
 {
     LinkedList* game;
-    Turn* turn;
     char** board;
     char player;
     int ff, height, width, max, turnNo, x, y;
     int end = 0;
+
     game = createLinkedList();
-    turn = {0, 0, 0, 0};
     height = settings->height;
     width = settings->width;
     max = height * width; /* Used to test for tie */
@@ -40,6 +39,7 @@ LinkedList* newGame(Settings* settings)
         }
         else
         {/* Placing player letter in selected tile when valid */
+            Turn* turn = (Turn*)malloc(sizeof(Turn));
             board[y][x] = player;
             /* Recording the turn for the logs */
             turn->turn = turnNo;

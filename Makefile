@@ -19,10 +19,10 @@ $(EXEC) : $(OBJ)
 UserInterface.o : UserInterface.c UserInterface.h FileManager.h LinkedList.h Game.h
 	$(CC) -c UserInterface.c $(CFLAGS)
 
-FileManager.o : FileManager.c FileManager.h
+FileManager.o : FileManager.c FileManager.h LinkedList.h Game.h
 	$(CC) -c FileManager.c $(CFLAGS)
 
-Game.o : Game.c Game.h
+Game.o : Game.c Game.h LinkedList.h FileManager.h
 	$(CC) -c Game.c $(CFLAGS)
 
 LinkedList.o : LinkedList.c LinkedList.h

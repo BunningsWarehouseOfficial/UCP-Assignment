@@ -1,14 +1,14 @@
 /* Filename:           FileManager.c
    Author:             Kristian Rados (19764285)
    Date Created:       13/10/2019
-   Date Last Modified: 19/10/2019
+   Date Last Modified: 20/10/2019
    Purpose: __________________________________________________________________*/
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
 #include "LinkedList.h"
 #include "FileManager.h"
-#include "Game.c"
+#include "Game.h"
 
 /* PURPOSE:  */
 void loadSettings(Settings* settings, char* filename)
@@ -146,8 +146,8 @@ void saveLogs(Settings* settings, LinkedList* log)
     min = local->tm_min;
     day = local->tm_mday;
     month = local->tm_mon + 1; /* Creating logfile filename */
-    sprintf(filename, "MNK_%d-%d-%d_%d-%d_%d-%d.log", m, n, k, hour, min,
-            day, month);
+    sprintf(filename, "MNK_%d-%d-%d_%02d-%02d_%02d-%02d.log", m, n, k, hour,
+            min, day, month);
 
     f = fopen(filename, "w");
     displayLogs(f, settings, log);
@@ -167,7 +167,7 @@ void displayLogs(FILE* stream, Settings* settings, LinkedList* log)
 	gameCount = turnCount = 0;
 
 	/* Settings (most recent) */
-	fprintf(stream, "SETTINGS:\n    M: %d\n    N: %d\n    K: %d\n\n",
+	fprintf(stream, "SETTINGS:\n    M: %d\n    N: %d\n    K: %d",
 	        settings->width, settings->height, settings->winCondition);
 
 	while (game != NULL)
@@ -178,10 +178,11 @@ void displayLogs(FILE* stream, Settings* settings, LinkedList* log)
     if (gameCount != 0)
     {
         game = log->head; /* Reinitialise game */
-        turn = ((LinkedList*)game->data)->head;
         for (ii = 1; ii <= gameCount; ii++)
         {/* Iterating through each game */
-            fprintf(stream, "GAME %d:\n", ii);
+            fprintf(stream, "\n\nGAME %d:\n", ii);
+            turnCount = 0; /* Reinitialising for this game */
+            turn = ((LinkedList*)game->data)->head;
             while (turn != NULL)
             {/* Counting how many turns this game had */
                 turnCount++;
@@ -192,11 +193,15 @@ void displayLogs(FILE* stream, Settings* settings, LinkedList* log)
             for (jj = 1; jj <= turnCount; jj++)
             {/* Iterating through each turn */
                 data = turn->data;
+                if (data->turn != 1) /* Prevent unnecessary spacing at end */
+                    fprintf(stream, "\n\n");
                 fprintf(stream, "    Turn: %d\n    Player: %c\n    Location: "
-                       "%d,%d\n\n", data->turn, data->player, data->x, data->y);
+                       "%d,%d", data->turn, data->player, data->x, data->y);
                 turn = turn->next;
             }
             game = game->next;
         }
+        if (stream == stdout) /* Prevent unnecessary spacing at end of file */
+            fprintf(stream, "\n");
     }
 }
