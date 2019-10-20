@@ -308,7 +308,8 @@ int checkDiagonals(char** board, char player, Settings* settings, int x, int y)
 /* PURPOSE:
 Handles user input for the game itself, determining the coordinates in which
 the current player would like to place their tile. Ensures that the user's
-input is both valid and within the correct range. */
+input is both valid and within the correct range. Exports x and y values
+via pointers. */
 void coordInput(int width, int height, int* x, int* y, char player)
 {
     int valid, input;

@@ -137,7 +137,8 @@ void freeGameLog(void* gameLog)
 Only runs when program is compiled with EDITOR defined as true. Allows the user
 to choose and then change one of the game's settings values during runtime.
 Changed values persist through the program via the settings struct, so the log
-file will only show the most recent settings. */
+file will only show the most recent settings. Exports settings struct via a
+pointer. */
 void editSettings(Settings* settings)
 {
     int valid, input, value;

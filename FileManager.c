@@ -19,7 +19,7 @@ not the rest of the program runs. It opens a file specified by the user's
 command line parameter and validates that it is of the correct format and that
 the values are valid. If the settings file is valid, the settings are assigned
 to a struct and the rest of the program is run, with this settings struct
-passed throught the program. */
+passed throught the program by being exported as a pointer. */
 void loadSettings(Settings* settings, char* filename)
 {
     FILE *f;
